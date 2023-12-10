@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SavedLocationsPage from "./SavedLocationsPage";
@@ -24,11 +24,10 @@ const App = () => {
       "CREATE TABLE IF NOT EXISTS locations (id INTEGER PRIMARY KEY AUTOINCREMENT, location TEXT, latitude REAL, longitude REAL)"
     );
   });
-
-  // sql command add location to the database
-
+  // function to add a location to the database
   const addLocationToList = (selectedLocation) => {
     db.transaction((tx) => {
+      // sql command add location to the database
       tx.executeSql(
         "INSERT INTO locations (location, latitude, longitude) VALUES (?, ?, ?)",
         [
@@ -37,6 +36,7 @@ const App = () => {
           selectedLocation.longitude,
         ],
         (_, { insertId }) => {
+          // update saved locations
           setSavedLocations([
             ...savedLocations,
             { id: insertId, ...selectedLocation },
@@ -46,21 +46,21 @@ const App = () => {
     });
   };
 
-  // sql command delete location from database
-
+  // function to delete location from the database
   const deleteLocation = (locationId) => {
     const updatedLocations = savedLocations.filter(
       (location) => location.id !== locationId
     );
-
+    // sql command delete location from database
     db.transaction((tx) => {
       tx.executeSql("DELETE FROM locations WHERE id = ?", [locationId], () => {
+        // update saved locations
         setSavedLocations(updatedLocations);
       });
     });
   };
 
-  // navigator
+  // tab navigator
 
   return (
     <NavigationContainer>

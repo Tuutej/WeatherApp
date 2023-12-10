@@ -25,15 +25,11 @@ const iconMapping = {
   "50n": require("./assets/50n.png"),
 };
 
-const MapPage = ({ navigation, addLocationToList }) => {
+const MapPage = ({ addLocationToList }) => {
   // states to manage location and weather data
 
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
-
-  const getLocalWeatherIcon = (iconCode) => {
-    return iconMapping[iconCode];
-  };
 
   // fetch weather data from openweathermap api
   const fetchWeatherData = async (latitude, longitude) => {
@@ -61,6 +57,7 @@ const MapPage = ({ navigation, addLocationToList }) => {
   }, [selectedLocation]);
 
   return (
+    // map display
     <View style={{ flex: 1 }}>
       <MapView
         style={{ flex: 1, width: "100%" }}
@@ -85,6 +82,7 @@ const MapPage = ({ navigation, addLocationToList }) => {
       </MapView>
 
       <View
+        // button to save location to the favourites list
         style={{
           position: "absolute",
           bottom: 20,
@@ -106,8 +104,8 @@ const MapPage = ({ navigation, addLocationToList }) => {
           color="#348feb"
         />
       </View>
-
       {weatherData && weatherData.main && (
+        // box showing the weather data of currently selected location
         <View
           style={{
             position: "absolute",
@@ -119,7 +117,7 @@ const MapPage = ({ navigation, addLocationToList }) => {
           }}
         >
           <Image
-            source={getLocalWeatherIcon(weatherData.weather[0].icon)}
+            source={iconMapping[weatherData.weather[0].icon]}
             style={{ width: 25, height: 25 }}
           />
           <Text style={{ color: "#348feb" }}>Location: {weatherData.name}</Text>

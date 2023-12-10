@@ -76,6 +76,7 @@ const SavedLocationsPage = ({ savedLocations, deleteLocation }) => {
   }, [savedLocations]);
 
   return (
+    // flatlist displaying the favourite locations and the weather data
     <View style={styles.container}>
       <FlatList
         data={displayedLocations}
@@ -85,24 +86,36 @@ const SavedLocationsPage = ({ savedLocations, deleteLocation }) => {
             <Text style={styles.locationText}>{item.location}</Text>
             <View style={styles.weatherContainer}>
               <View style={styles.weatherDetails}>
-                <Text style={styles.weatherHeaderText}>{item.data.name}</Text>
-                <Text style={styles.weatherText}>
-                  Weather: {item.data.description}
+                <Text style={styles.weatherHeaderText}>
+                  {item.data && item.data.name}
                 </Text>
                 <Text style={styles.weatherText}>
-                  Temperature: {Math.round(item.data.main.temp)}°C
+                  Weather:{" "}
+                  {item.data && item.data.description
+                    ? item.data.description
+                    : "N/A"}
                 </Text>
-                <Text style={styles.weatherText}>
-                  Wind Speed: {item.data.wind.speed.toFixed(1)} m/s
-                </Text>
-              </View>
-              <Image
-                source={iconMapping[item.data.icon]}
-                style={styles.weatherIcon}
-              />
-            </View>
+                {item.data && item.data.main && (
+                  <Text style={styles.weatherText}>
+                    Temperature: {Math.round(item.data.main.temp)}°C
+                  </Text>
+                )}
 
+                {item.data && item.data.wind && (
+                  <Text style={styles.weatherText}>
+                    Wind Speed: {item.data.wind.speed.toFixed(1)} m/s
+                  </Text>
+                )}
+              </View>
+              {item.data && item.data.icon && (
+                <Image
+                  source={iconMapping[item.data.icon]}
+                  style={styles.weatherIcon}
+                />
+              )}
+            </View>
             <TouchableOpacity
+              // delete button
               style={styles.deleteButton}
               onPress={() => deleteLocation(item.id)}
             >
